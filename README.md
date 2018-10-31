@@ -1,2 +1,1 @@
-# Project
-Project들
+그래픽스 프로젝트 _ 태양
