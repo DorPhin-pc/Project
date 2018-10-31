@@ -1,0 +1,248 @@
+#include "stdafx.h"
+#include <windows.h>
+#include <glut.h>
+#include <math.h>
+#include <GLAUX.H>
+#pragma comment(lib,"glaux.lib")
+#pragma comment(lib,"legacy_stdio_definitions.lib")
+
+static float Day = 0,Day1=0, Day2 = 0, Day3 = 0, Day4 = 0, Day5 = 0, Day6 = 0, Day7 = 0;		//공전
+static int Time = 0;//자전
+GLUquadricObj *sun, *mercury, *venus, *earth, *mars, *moon,*jupiter,*saturn,*saturn_ring,*uranus,*neptune;
+GLUquadricObj *obj;
+AUX_RGBImageRec *pTextureImage[11];
+GLuint MyTextureObject[11];
+
+
+AUX_RGBImageRec* LoadBMP(const char *szFilename) {
+	FILE *pFile = NULL;
+	if (!szFilename) {
+		return NULL;
+	}
+	fopen_s(&pFile, szFilename, "r");
+	if (pFile) {
+		fclose(pFile);
+		return auxDIBImageLoad(szFilename);
+	}
+	return NULL;
+}
+
+int LoadGLTextures() {
+	sun = gluNewQuadric();
+	mercury = gluNewQuadric();
+	venus = gluNewQuadric();
+	earth = gluNewQuadric();
+	moon = gluNewQuadric();
+	mars = gluNewQuadric();
+	jupiter = gluNewQuadric();
+	saturn = gluNewQuadric();
+	saturn_ring = gluNewQuadric();
+	uranus = gluNewQuadric();
+	neptune = gluNewQuadric();
+
+	int Status = FALSE;
+
+	gluQuadricTexture(sun, GL_TRUE);
+	gluQuadricTexture(mercury, GL_TRUE);
+	gluQuadricTexture(venus, GL_TRUE);
+	gluQuadricTexture(earth, GL_TRUE);
+	gluQuadricTexture(moon, GL_TRUE);
+	gluQuadricTexture(mars, GL_TRUE);
+	gluQuadricTexture(jupiter, GL_TRUE);
+	gluQuadricTexture(saturn, GL_TRUE);
+	gluQuadricTexture(saturn_ring, GL_TRUE);
+	gluQuadricTexture(uranus, GL_TRUE);
+	gluQuadricTexture(neptune, GL_TRUE);
+
+	memset(pTextureImage, 0, sizeof(void *) * 1);
+	if ((pTextureImage[0] = LoadBMP("sun.bmp")) &&
+		(pTextureImage[1] = LoadBMP("mercury.bmp")) &&
+		(pTextureImage[2] = LoadBMP("venus.bmp")) &&
+		(pTextureImage[3] = LoadBMP("earth.bmp")) &&
+		(pTextureImage[4] = LoadBMP("moon.bmp")) &&
+		(pTextureImage[5] = LoadBMP("mars.bmp")) &&
+		(pTextureImage[6] = LoadBMP("jupiter.bmp")) &&
+		(pTextureImage[7] = LoadBMP("saturn.bmp")) &&
+		(pTextureImage[8] = LoadBMP("saturn_ring.bmp")) &&
+		(pTextureImage[9] = LoadBMP("uranus.bmp")) &&
+		(pTextureImage[10] = LoadBMP("neptune.bmp")))
+	{
+		Status = TRUE;
+		glGenTextures(10, &MyTextureObject[0]);
+		for (int i = 0; i <= 10; i++) {
+			glBindTexture(GL_TEXTURE_2D, MyTextureObject[i]);
+			glTexImage2D(GL_TEXTURE_2D, 0, 3, pTextureImage[i]->sizeX,
+				pTextureImage[i]->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE,
+				pTextureImage[i]->data);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glEnable(GL_TEXTURE_2D);
+		}
+	}
+	for (int i = 0; i <= 10; i++) {
+		if (pTextureImage[i]) {
+			if (pTextureImage[i]->data) {
+				free(pTextureImage[i]->data);
+			}
+			free(pTextureImage[i]);
+		}
+	}
+	return Status;
+}
+
+
+void test()
+{
+	//태양
+	glBindTexture(GL_TEXTURE_2D, MyTextureObject[0]);
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);
+	gluSphere(sun, 0.13, 20, 16);
+	glLoadIdentity(); // 지역좌표계와 전역좌표계 일치
+
+	glPushMatrix();									//수성 좌표계 추가		
+	glRotatef((GLfloat)Day, 0.0, 0.0, 1.0);				//수성의공전
+	glTranslatef(0.1, 0.0, 0.0);
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glBindTexture(GL_TEXTURE_2D, MyTextureObject[1]);
+	gluSphere(mercury, 0.026, 10, 8);
+	glPopMatrix();
+
+	glPushMatrix();									//수성 좌표계 추가		
+	glRotatef((GLfloat)Day1, 0.0, 0.0, 1.0);				//수성의공전
+	glTranslatef(0.3, 0.0, 0.0);
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glBindTexture(GL_TEXTURE_2D, MyTextureObject[2]);
+	gluSphere(venus, 0.05, 10, 8);
+	glPopMatrix();
+
+	glPushMatrix();									//수성 좌표계 추가		
+	glRotatef((GLfloat)Day2, 0.0, 0.0, 1.0);				//수성의공전
+	glTranslatef(0.55, 0.0, 0.0);
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glBindTexture(GL_TEXTURE_2D, MyTextureObject[3]);
+	gluSphere(earth, 0.06, 10, 8);
+
+	glPushMatrix();			
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);
+	glTranslatef(0.11, 0.0, 0.0);
+	glBindTexture(GL_TEXTURE_2D, MyTextureObject[4]);
+	gluSphere(moon, 0.015, 10, 8);
+	glPopMatrix();
+	glPopMatrix();
+
+	glPushMatrix();									//수성 좌표계 추가		
+	glRotatef((GLfloat)Day3, 0.0, 0.0, 1.0);				//수성의공전
+	glTranslatef(0.7, 0.0, 0.0);
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glBindTexture(GL_TEXTURE_2D, MyTextureObject[5]);
+	gluSphere(mars, 0.05, 10, 8);
+	glPopMatrix();
+
+	glPushMatrix();									//수성 좌표계 추가		
+	glRotatef((GLfloat)Day4, 0.0, 0.0, 1.0);				//수성의공전
+	glTranslatef(1.0, 0.0, 0.0);
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glBindTexture(GL_TEXTURE_2D, MyTextureObject[6]);
+	gluSphere(jupiter, 0.12, 10, 8);
+	glPopMatrix();
+
+	glPushMatrix();									//수성 좌표계 추가		
+	glRotatef((GLfloat)Day5, 0.0, 0.0, 1.0);				//수성의공전
+	glTranslatef(1.4, 0.0, 0.0);
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glBindTexture(GL_TEXTURE_2D, MyTextureObject[7]);
+	gluSphere(saturn, 0.085, 10, 8);
+	
+	glPushMatrix();
+	obj = gluNewQuadric();
+	glBindTexture(GL_TEXTURE_2D, MyTextureObject[8]);
+	gluDisk(saturn_ring, 0.1, 0.17, 10, 8);
+	glPopMatrix();
+	glPopMatrix();
+
+	glPushMatrix();									//수성 좌표계 추가		
+	glRotatef((GLfloat)Day6, 0.0, 0.0, 1.0);				//수성의공전
+	glTranslatef(1.7, 0.0, 0.0);
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glBindTexture(GL_TEXTURE_2D, MyTextureObject[9]);
+	gluSphere(uranus, 0.07, 10, 8);
+	glPopMatrix();
+
+	glPushMatrix();									//수성 좌표계 추가		
+	glRotatef((GLfloat)Day7, 0.0, 0.0, 1.0);				//수성의공전
+	glTranslatef(1.9, 0.0, 0.0);
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glBindTexture(GL_TEXTURE_2D, MyTextureObject[10]);
+	gluSphere(neptune, 0.07, 10, 8);
+	glPopMatrix();
+
+
+}
+
+void MyTimer(int value)
+{
+	Day += (48.87 / 10);
+	Day1 += (35 / 10);
+	Day2 += (29.78 / 10);
+	Day3 += (24.13 / 10);
+	Day4 += (13.076 / 10);
+	Day5 += (9.69 / 10);
+	Day6 += (6.81 / 10);
+	Day7 += (5.43 / 10);
+
+	Time = (Time + 2) % 360;
+	if (Day>360) Day -= 360;
+	if (Day1>360) Day1 -= 360;
+	if (Day2>360) Day2 -= 360;
+	if (Day3>360) Day3 -= 360;
+	if (Day4>360) Day4 -= 360;
+	if (Day5>360) Day5 -= 360;
+	if (Day6>360) Day6 -= 360;
+	if (Day7>360) Day7 -= 360;
+
+	glutTimerFunc(40, MyTimer, 1);
+	glutPostRedisplay();
+}
+
+void display(void)
+{
+	glEnable(GL_DEPTH_TEST);
+	glLoadIdentity();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	gluLookAt(0.0, 3.5, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0);
+	test();
+
+	glutSwapBuffers();
+}
+
+
+void MyReshape(int w, int h)
+{
+	glViewport(0, 0, w, h);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	glOrtho(-3.0, 3.0, -3.0, 3.0, -2.0, 4.0);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+int main(int argc, char* argv[])
+{
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize(600, 600);
+	glutCreateWindow("태양계");
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glutReshapeFunc(MyReshape);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-2.0, 2.0, -2.0, 2.0, -2.0, 2.0);
+	LoadGLTextures();
+	glutDisplayFunc(display);
+	glutTimerFunc(40, MyTimer, 1);
+	glutMainLoop();
+	return 0;
+}
