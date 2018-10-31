@@ -1,0 +1,55 @@
+package com.cookie;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+
+public class Client2 {
+	public static void main(String[] args){
+		Socket sock = null;
+		BufferedReader br = null;
+		PrintWriter pw = null;
+		boolean endflag = false;
+		
+		try{
+			sock = new Socket("localhost",8008);
+			pw = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()));
+			br = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+			
+			BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
+			
+			pw.println(args[0]);
+			pw.flush();
+			System.out.println("접속완료 ID : " + args[0]);
+			
+			InputThread it = new InputThread(sock,br);
+			it.start();
+			
+			String line = null;
+			
+			while((line = keyboard.readLine()) != null){
+				pw.println(line);
+				pw.flush();
+				if(line.equals("/quit")){
+					endflag = true;
+					break;
+				}
+			}
+			System.out.println("클라이언트의 접속을 종료합니다.");
+		}catch(Exception ex){
+			if(!endflag)
+				System.out.println(ex);
+		}finally{
+			try{
+				if(pw != null)
+					pw.close();
+			}catch(Exception ex){}
+			try{
+				if(sock != null)
+					sock.close();
+			}catch(Exception ex){}
+		}
+	}
+}
