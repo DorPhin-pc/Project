@@ -99,57 +99,57 @@ void test()
 	gluSphere(sun, 0.13, 20, 16);
 	glLoadIdentity(); // 지역좌표계와 전역좌표계 일치
 
-	glPushMatrix();									//수성 좌표계 추가		
-	glRotatef((GLfloat)Day, 0.0, 0.0, 1.0);				//수성의공전
+	glPushMatrix();					//수성 좌표계 추가		
+	glRotatef((GLfloat)Day, 0.0, 0.0, 1.0);		//수성의공전
 	glTranslatef(0.1, 0.0, 0.0);
 	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
 	glBindTexture(GL_TEXTURE_2D, MyTextureObject[1]);
 	gluSphere(mercury, 0.026, 10, 8);
 	glPopMatrix();
 
-	glPushMatrix();									//수성 좌표계 추가		
-	glRotatef((GLfloat)Day1, 0.0, 0.0, 1.0);				//수성의공전
+	glPushMatrix();					//금성 좌표계 추가		
+	glRotatef((GLfloat)Day1, 0.0, 0.0, 1.0);	//금성의공전
 	glTranslatef(0.3, 0.0, 0.0);
-	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//금성의자전
 	glBindTexture(GL_TEXTURE_2D, MyTextureObject[2]);
 	gluSphere(venus, 0.05, 10, 8);
 	glPopMatrix();
 
-	glPushMatrix();									//수성 좌표계 추가		
-	glRotatef((GLfloat)Day2, 0.0, 0.0, 1.0);				//수성의공전
+	glPushMatrix();					//지구 좌표계 추가		
+	glRotatef((GLfloat)Day2, 0.0, 0.0, 1.0);	//지구의공전
 	glTranslatef(0.55, 0.0, 0.0);
-	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//지구의자전
 	glBindTexture(GL_TEXTURE_2D, MyTextureObject[3]);
 	gluSphere(earth, 0.06, 10, 8);
 
-	glPushMatrix();			
-	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);
+	glPushMatrix();					//달 좌표계 추가
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//달의 자전
 	glTranslatef(0.11, 0.0, 0.0);
 	glBindTexture(GL_TEXTURE_2D, MyTextureObject[4]);
-	gluSphere(moon, 0.015, 10, 8);
+	gluSphere(moon, 0.015, 10, 8);			//달의 공전
 	glPopMatrix();
 	glPopMatrix();
 
-	glPushMatrix();									//수성 좌표계 추가		
-	glRotatef((GLfloat)Day3, 0.0, 0.0, 1.0);				//수성의공전
+	glPushMatrix();					//화성 좌표계 추가		
+	glRotatef((GLfloat)Day3, 0.0, 0.0, 1.0);	//화성의공전
 	glTranslatef(0.7, 0.0, 0.0);
-	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//화성의자전
 	glBindTexture(GL_TEXTURE_2D, MyTextureObject[5]);
 	gluSphere(mars, 0.05, 10, 8);
 	glPopMatrix();
 
-	glPushMatrix();									//수성 좌표계 추가		
-	glRotatef((GLfloat)Day4, 0.0, 0.0, 1.0);				//수성의공전
+	glPushMatrix();					//목성 좌표계 추가		
+	glRotatef((GLfloat)Day4, 0.0, 0.0, 1.0);	//목성의공전
 	glTranslatef(1.0, 0.0, 0.0);
-	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//목성의자전
 	glBindTexture(GL_TEXTURE_2D, MyTextureObject[6]);
 	gluSphere(jupiter, 0.12, 10, 8);
 	glPopMatrix();
 
-	glPushMatrix();									//수성 좌표계 추가		
-	glRotatef((GLfloat)Day5, 0.0, 0.0, 1.0);				//수성의공전
+	glPushMatrix();					//토성 좌표계 추가		
+	glRotatef((GLfloat)Day5, 0.0, 0.0, 1.0);	//토성의공전
 	glTranslatef(1.4, 0.0, 0.0);
-	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//토성의자전
 	glBindTexture(GL_TEXTURE_2D, MyTextureObject[7]);
 	gluSphere(saturn, 0.085, 10, 8);
 	
@@ -160,18 +160,18 @@ void test()
 	glPopMatrix();
 	glPopMatrix();
 
-	glPushMatrix();									//수성 좌표계 추가		
-	glRotatef((GLfloat)Day6, 0.0, 0.0, 1.0);				//수성의공전
+	glPushMatrix();					//천왕성 좌표계 추가		
+	glRotatef((GLfloat)Day6, 0.0, 0.0, 1.0);	//천왕성의공전
 	glTranslatef(1.7, 0.0, 0.0);
-	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//천왕성의자전
 	glBindTexture(GL_TEXTURE_2D, MyTextureObject[9]);
 	gluSphere(uranus, 0.07, 10, 8);
 	glPopMatrix();
 
-	glPushMatrix();									//수성 좌표계 추가		
-	glRotatef((GLfloat)Day7, 0.0, 0.0, 1.0);				//수성의공전
+	glPushMatrix();					//해왕성 좌표계 추가		
+	glRotatef((GLfloat)Day7, 0.0, 0.0, 1.0);	//해왕성의공전
 	glTranslatef(1.9, 0.0, 0.0);
-	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//수성의자전
+	glRotatef((GLfloat)Time, 0.0, 0.0, 1.0);	//성의자전
 	glBindTexture(GL_TEXTURE_2D, MyTextureObject[10]);
 	gluSphere(neptune, 0.07, 10, 8);
 	glPopMatrix();
